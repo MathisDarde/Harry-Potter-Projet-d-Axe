@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Harry Potter Cards</title>
+    <link rel="icon" href="images/symbol deathly hallows.svg">
+    <link rel="stylesheet" type="text/css" href="hpsingle.css">
+</head>
+<header>
+    <a href="index.html"><div class="logo">Harry Potter Cards</div></a>
+    <input type="checkbox" id="nav_check" hidden>
+    <nav>
+        <ul>
+            <li>
+                <a href="index.html" class="">Accueil</a>
+            </li>
+            <li>
+                <a href="tirage_quotidien.html">Tirage quotidien</a>
+            </li>
+            <li>
+                <a href="ma_collection.html">Ma collection</a>
+            </li>
+            <li>
+                <a href="echange.html">Echange de cartes</a>
+            </li>
+            <li>
+                <a href="profil.html">Profil</a>
+            </li>
+        </ul>
+    </nav>
+    <label for="nav_check" class="hamburger">
+        <div></div>
+        <div></div>
+        <div></div>
+    </label>
+</header>
+<body>
+    <div id="character"></div>
+    <script>
+        function fetchCharacter() {
+            let url = window.location.search
+            let slug = new URLSearchParams(url).get('slug')
+            return fetch('https://hp-api.lainocs.fr/characters/' + slug)
+            .then((response) => response.json())
+        }
+
+        async function displayCharacter() {
+            const data = await fetchCharacter()
+            console.log(data);
+            document.querySelector('#character').innerHTML += `
+                <div class="single">
+                    <p class="titre">${data.name}</p>
+                    <div class="imageicons">
+                        <img src="${data.image}" alt="${data.name}" id="imagesingle">
+                        <div class="side-elements">
+                            <div class="echange"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+                            <div class="share"><i class="fa-regular fa-share-from-square"></i></div>
+                            <div class="fav"><i class="fa-regular fa-heart"></i></div>
+                        </div>
+                        
+                    </div>
+                    <p class="paragraphe">
+                    </p>
+                    <p>Maison : ${data.house}</p>
+                    <p>Acteur : ${data.actor}</p>
+                    <p>Couleur des yeux : ${data.eyes}</p>
+                    <p>Couleur des cheveux : ${data.hairs}</p>
+                    <p>Date de naissance : ${new Date(data.birthday).toLocaleDateString()}</p>
+                    <p>Sang : ${data.blood}</p>
+                    <p>Baguette : ${data.wand}</p>
+                    <p>Patronus : ${data.patronus}</p>
+                    <p>Rôle dans les films : ${data.role}</p>
+                    <a href="index.html">Retour a l'accueil</a>
+                </div>
+            `;
+
+            let element = document.getElementById('imagesingle');
+                
+                if(data.house == "Gryffindor") {
+                     element.classList.add('gryffondor')
+                }
+                else if(data.house == 'Slytherin') {
+                   element.classList.add('serpentard')
+                }
+                else if(data.house == 'Hufflepuff') {
+                    element.classList.add('poufsouffle')
+                }
+                else if(data.house == 'Ravenclaw') {
+                    element.classList.add('serdaigle')
+                }
+                else {
+                    element.classList.add('pasdemaisonaffiliee')
+                }
+            }
+
+        displayCharacter();
+    </script>
+</body>
+</html>
